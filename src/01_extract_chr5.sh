@@ -76,28 +76,28 @@ do
         prefix=$(basename $bam .bam)
         
 	echo "Getting all mapped reads where both mates are mapped..."
-	samtools view -bh -f 1 -F 12 $bam chr5 > $OUTDIR/$bam.paired.chr5.bam
+	samtools view -bh -f 1 -F 12 $bam chr5 > $OUTDIR/$prefix.paired.chr5.bam
 	
 	echo "Getting reads where R1 is unmapped, R2 is mapped in a primary alignment..."
-	samtools view -bh -f 4 -F 264 $bam chr5 > $OUTDIR/$bam.matemapped.chr5.bam
+	samtools view -bh -f 4 -F 264 $bam chr5 > $OUTDIR/$prefix.matemapped.chr5.bam
  
 	echo "Getting reads where R1 is mapped, and R2 is unmapped..."
-	samtools view -bh -f 8 -F 260 $bam chr5 > $OUTDIR/$bam.mateunmapped.chr5.bam
+	samtools view -bh -f 8 -F 260 $bam chr5 > $OUTDIR/$prefix.mateunmapped.chr5.bam
 
-	echo "Merge filtered bam files for $bam..."
-	samtools merge $OUTDIR/$bam.merged.chr5.bam  $OUTDIR/$bam.paired.chr5.bam $OUTDIR/$bam.matemapped.chr5.bam $OUTDIR/$bam.mateunmapped.chr5.bam
+	echo "Merge filtered bam files for $prefix..."
+	samtools merge $OUTDIR/$prefix.merged.chr5.bam  $OUTDIR/$prefix.paired.chr5.bam $OUTDIR/$prefix.matemapped.chr5.bam $OUTDIR/$prefix.mateunmapped.chr5.bam
 
 	echo "Sort merged file..."
-	samtools sort -n $OUTDIR/$bam.merged.chr5.bam $OUTDIR/$bam.merged.chr5.sorted
-	samtools index $OUTDIR/$bam.merged.chr5.sorted.bam
-	bedtools bamtofastq -i $OUTDIR/$bam.merged.chr5.sorted.bam -fq	$OUTDIR/$bam.chr5.R1.fq -fq2	$OUTDIR/$bam.chr5.R2.fq
+	samtools sort -n $OUTDIR/$prefix.merged.chr5.bam $OUTDIR/$prefix.merged.chr5.sorted
+	samtools index $OUTDIR/$prefix.merged.chr5.sorted.bam
+	bedtools bamtofastq -i $OUTDIR/$prefix.merged.chr5.sorted.bam -fq $OUTDIR/$prefix.chr5.R1.fq -fq2 $OUTDIR/$prefix.chr5.R2.fq
 	
 	echo "Deleting temporary files..."
-	rm $OUTDIR/$bam.paired.chr5.bam
-	rm $OUTDIR/$bam.matemapped.chr5.bam
-	rm $OUTDIR/$bam.mateunmapped.chr5.bam
+	rm $OUTDIR/$prefix.paired.chr5.bam
+	rm $OUTDIR/$prefix.matemapped.chr5.bam
+	rm $OUTDIR/$prefix.mateunmapped.chr5.bam
         
-        echo "Finished extraction of $bam on "`date`
+        echo "Finished extraction of $prefix on "`date`
 
 done
 
