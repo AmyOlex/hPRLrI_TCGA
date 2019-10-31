@@ -1,0 +1,126 @@
+#!/bin/bash
+
+# Amy Olex
+# 7/12/16
+# UPDATED: 10/15/19 fixed API URL
+# Bash Script: gdc_download_from_manifest
+#
+### Description ###
+# This script uses a manifest file obtained via the GDC API to download BAM files.
+# This script will download each file individually, decompress it and then run an MD5sum check on it.
+# If a file fails the MD5SUM check it's UUID and file name will be written to the md5_failed.log file in the LOGS folder.
+# This script requires the you run init_gdc_directories.make in the working directory first.
+#
+### Input ###
+# The only input this file needs id the GDC Manifest file.
+#
+### Output ###
+# This script will output 2 log files named after the input manifest file:
+# <manifest Name>.download.log
+# <manifest name>.md5Failed.log
+#
+### Usage ###
+# To use this script simple run it in the working directory with the manifest file as the first argument.
+#
+# >> nohup ./gdc_download_from_manifest ./MANIFESTS/my_UUIDS.manifest ~/GDC_token.txt 2 &
+
+##########################################
+
+
+## Get the input manifest file name and some other control variables
+
+manifest=$1
+token_file=$2
+token=`cat $token_file`
+VERBOSE=1
+MAXJOBS=$3
+
+
+### Define Functions
+function maxjobs {
+	while [ `jobs | wc -l` -ge $1 ] 
+	do
+		sleep 2
+	done
+}
+
+function download_file {
+	id=$1
+	md5=$2
+	file=$3
+
+	echo "$file : Starting Download on `date`..." >> $log
+	cmd="curl --remote-name --remote-header-name --header \"X-Auth-Token: $token\" 'https://api.gdc.cancer.gov/data/$id'"
+	eval $cmd
+	echo "$file : Completed Download on `date`" >> $log
+
+	echo "$file : Starting MD5SUM check on `date`..." >> $log
+	
+	file_sum=$(md5sum $file | awk '{print $1}')
+
+	if [ "$md5" != "$file_sum" ]
+	then
+		echo "$id  $file" >> $failed_log
+		echo "$file : FAILED MD5SUM Check! Correct MD5: $md5 --- Calculated MD5: $file_sum" >> $log
+	else
+		echo "$file : PASSED MD5SUM Check." >> $log
+	fi
+
+	echo "$file : Completed!" >> $log	
+}
+
+
+## Test to see if directory structure exists
+if [[ ! -d "LOGS" ]]
+then
+   echo "Error: LOGS/ directory does not exist. Please run the init_gdc_directories.make script and try again."
+   exit 1
+fi
+
+if [[ ! -d "MANIFESTS" ]]
+then
+   echo "Error: MANIFESTS/ directory does not exist. Please run the init_gdc_directories.make script and try again."
+   exit 1
+fi
+
+## Create the log file names
+manifest_base=`basename $manifest .txt`
+logdate=$(date +%y%m%d%H%M%S)
+log=./LOGS/$manifest_base.$logdate.download.log
+failed_log=./LOGS/$manifest_base.$logdate.md5Failed.log
+
+## Create the run logs
+touch $log
+touch $failed_log
+
+## initilize the log file
+echo "GDC Download Log started on `date`" >> $log
+echo "Input Manifest File: $manifest" >> $log
+
+## Test to see if input manifest exists
+if [[ ! -e $manifest ]]
+then
+   echo "Error: $manifest does not exist."
+   exit 1
+fi
+if [[ $VERBOSE = 1 ]]; then echo "$manifest exists." >> $log; fi
+
+
+
+#### Start to process the file
+
+tail --lines=+2 $manifest | while read id filename md5 size state
+do
+	maxjobs $MAXJOBS
+	echo "$filename : Starting to process UUID $id, file $filename" >> $log
+	
+	if [[ -e $filename ]]
+	then
+		echo "$filename : Warning, file $filename already exists...skipping." >> $log
+	else
+		echo "$filename : Downloading file ..." >> $log
+		download_file $id $md5 $filename &
+	fi
+done
+
+
