@@ -75,6 +75,9 @@ do
   	echo "Starting extraction of $bam on "`date`
         prefix=$(basename $bam .bam)
         
+	echo "Indexing bam $prefix..."
+	samtools index $bam
+	
 	echo "Getting all mapped reads where both mates are mapped..."
 	samtools view -bh -f 1 -F 12 $bam chr5 > $OUTDIR/$prefix.paired.chr5.bam
 	
