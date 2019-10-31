@@ -64,9 +64,11 @@ if [[ -z $DIR ]]; then usage; exit 1; fi
 cd $DIR
 
 INPUT=$FILE
-OUTDIR=$DIR/01_chr5fastq
+FQ_OUT=$DIR/chr5fastq
+BAM_OUT=$DIR/chr5bam
 
-mkdir -p $OUTDIR
+mkdir -p $FQ_OUT
+mkdir -p $BAM_OUT
 
 echo "Starting Chr5 Extraction "`date`
 
@@ -75,30 +77,35 @@ do
   	echo "Starting extraction of $bam on "`date`
         prefix=$(basename $bam .bam)
         
-	echo "Indexing bam $prefix..."
-	samtools index $bam
-	
+	if [[ -e $bam.bai ]]
+	then
+		echo "index already exists...moving to extraction."
+	else
+		echo "Indexing bam $prefix..."
+		samtools index $bam
+	fi	
+
 	echo "Getting all mapped reads where both mates are mapped..."
-	samtools view -bh -f 1 -F 12 $bam chr5 > $OUTDIR/$prefix.paired.chr5.bam
+	samtools view -bh -f 1 -F 12 $bam chr5 > $BAM_OUT/$prefix.paired.chr5.bam
 	
 	echo "Getting reads where R1 is unmapped, R2 is mapped in a primary alignment..."
-	samtools view -bh -f 4 -F 264 $bam chr5 > $OUTDIR/$prefix.matemapped.chr5.bam
+	samtools view -bh -f 4 -F 264 $bam chr5 > $BAM_OUT/$prefix.matemapped.chr5.bam
  
 	echo "Getting reads where R1 is mapped, and R2 is unmapped..."
-	samtools view -bh -f 8 -F 260 $bam chr5 > $OUTDIR/$prefix.mateunmapped.chr5.bam
+	samtools view -bh -f 8 -F 260 $bam chr5 > $BAM_OUT/$prefix.mateunmapped.chr5.bam
 
 	echo "Merge filtered bam files for $prefix..."
-	samtools merge $OUTDIR/$prefix.merged.chr5.bam  $OUTDIR/$prefix.paired.chr5.bam $OUTDIR/$prefix.matemapped.chr5.bam $OUTDIR/$prefix.mateunmapped.chr5.bam
+	samtools merge $BAM_OUT/$prefix.merged.coordSorted.chr5.bam  $BAM_OUT/$prefix.paired.chr5.bam $BAM_OUT/$prefix.matemapped.chr5.bam $BAM_OUT/$prefix.mateunmapped.chr5.bam
 
-	echo "Sort merged file..."
-	samtools sort -n $OUTDIR/$prefix.merged.chr5.bam $OUTDIR/$prefix.merged.chr5.sorted
-	samtools index $OUTDIR/$prefix.merged.chr5.sorted.bam
-	bedtools bamtofastq -i $OUTDIR/$prefix.merged.chr5.sorted.bam -fq $OUTDIR/$prefix.chr5.R1.fq -fq2 $OUTDIR/$prefix.chr5.R2.fq
+	echo "Sort merged file on read names..."
+	samtools sort -n $BAM_OUT/$prefix.merged.coordSorted.chr5.bam $BAM_OUT/$prefix.merged.nameSorted.chr5
+	samtools index $BAM_OUT/$prefix.merged.coordSorted.chr5.bam
+	bedtools bamtofastq -i $BAM_OUT/$prefix.merged.nameSorted.chr5.bam -fq $FQ_OUT/$prefix.chr5.R1.fq -fq2 $FQ_OUT/$prefix.chr5.R2.fq
 	
 	echo "Deleting temporary files..."
-	rm $OUTDIR/$prefix.paired.chr5.bam
-	rm $OUTDIR/$prefix.matemapped.chr5.bam
-	rm $OUTDIR/$prefix.mateunmapped.chr5.bam
+	rm $BAM_OUT/$prefix.paired.chr5.bam
+	rm $BAM_OUT/$prefix.matemapped.chr5.bam
+	rm $BAM_OUT/$prefix.mateunmapped.chr5.bam
         
         echo "Finished extraction of $prefix on "`date`
 
