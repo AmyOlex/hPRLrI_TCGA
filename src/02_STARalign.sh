@@ -15,7 +15,7 @@ REQUIRED ARGUMENTS:
    	-f      Input file with list of FastQ files to process.
 
 OPTIONAL ARGUMENTS:
-	-d		Directory of where results should be saved.  Sub-folder 02_STAR will be created here.
+	-d		Directory of where results should be saved.  Sub-folder 02_STAR_align_chr5 will be created here.
 
 -f INPUT File:
 Input file with list of FastQ files to process.
@@ -61,7 +61,7 @@ if [[ -z $DIR ]]; then usage; exit 1; fi
 cd $DIR
 
 INPUT=$FILE
-OUTDIR=$DIR/01_star-align
+OUTDIR=$DIR/02_STAR_align_chr5
 
 mkdir -p $OUTDIR
 
