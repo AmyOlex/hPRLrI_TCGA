@@ -61,7 +61,7 @@ if [[ -z $DIR ]]; then usage; exit 1; fi
 cd $DIR
 
 INPUT=$FILE
-OUTDIR=$DIR/02_STAR_align_chr5
+OUTDIR=$DIR/02_STAR_align2_chr5
 
 mkdir -p $OUTDIR
 
@@ -71,7 +71,7 @@ cat $INPUT | while read read1 read2
 do
 	echo "Starting alignment of $read1 on "`date` 
 	prefix=$(basename $read1 .fq | sed "s/R1_//g") 
-	STAR --runThreadN 20 --genomeDir /data/refGenomes/human/GDC-GRCh38-STAR/ --readFilesIn ../src/$read1 ../src/$read2 --readFilesCommand cat --outSAMtype BAM Unsorted --outSAMorder Paired --outReadsUnmapped Fastx --outFileNamePrefix $OUTDIR/$prefix. --quantMode TranscriptomeSAM --outFilterMultimapNmax 1
+	STAR --runThreadN 20 --genomeDir /data/refGenomes/human/GDC-GRCh38-STAR/ --readFilesIn $read1 $read2 --readFilesCommand cat --outSAMtype BAM Unsorted --outSAMorder Paired --outReadsUnmapped Fastx --outFileNamePrefix $OUTDIR/$prefix. --quantMode TranscriptomeSAM --outFilterMultimapNmax 1
 	echo $prefix
 	echo "Finished alignment of $read1 on "`date`
 

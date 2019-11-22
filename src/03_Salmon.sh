@@ -60,7 +60,7 @@ if [[ -z $DIR ]]; then usage; exit 1; fi
 
 
 INPUT=$FILE
-OUTDIR=$DIR/04_Salmon
+OUTDIR=$DIR/03_Salmon2
 
 mkdir -p $OUTDIR
 
