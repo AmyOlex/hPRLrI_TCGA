@@ -35,12 +35,16 @@ run_contrast <- function(st, outdir, outprefix, control_level) {
 }
 
 
+setwd("/home/alolex/data/clients/CClevenger/DESeq_Analysis/")
 
-setwd("~/Desktop/CCTR_Git_Repos/CClevenger_TCGA-BRCA/src")
+#data_dir <- "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_1222_RNASeq_HTSeq-counts_022620"
+data_dir <- "/home/alolex/data/clients/CClevenger/DESeq_Analysis/data"
 
-data_dir <- "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_1222_RNASeq_HTSeq-counts_022620"
+#sample_metadata <- read.delim(file = "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_MetadataMaster_031220.tsv", header = TRUE)
+sample_metadata <- read.delim(file = "/home/alolex/data/clients/CClevenger/DESeq_Analysis/BRCA_MetadataMaster_031220.tsv", header = TRUE)
 
-sample_metadata <- read.delim(file = "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_MetadataMaster_031220.tsv", header = TRUE)
+outdir <- "/home/alolex/data/clients/CClevenger/DESeq_Analysis/"
+
 
 sample_metadata_HRPos <- sample_metadata[sample_metadata$hormone.status == "Positive",]
 sample_metadata_intermediate <- sample_metadata[sample_metadata$intermediate.expressed == "Yes",]
@@ -53,25 +57,25 @@ file_list <- paste(data_dir, as.character(sample_metadata$count.file.name), sep 
 tertile <- ntile(sample_metadata$wt.expression, 3)
 sample_metadata$wt.tertile1v23 <- recode(tertile, "1" = "low", "2" = "high", "3" = "high")
 sample_metadata$wt.tertile12v3 <- recode(tertile, "1" = "low", "2" = "low", "3" = "high")
-write.table(sample_metadata, file = "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/Tertile_Contrasts_WTExpression.txt", sep="\t", quote = FALSE)
+write.table(sample_metadata, file = paste(outdir, "Tertile_Contrasts_WTExpression.txt", sep=""), sep="\t", quote = FALSE)
 
 # all Intermediate
 tertile <- ntile(sample_metadata_intermediate$intermediate.expression, 3)
 sample_metadata_intermediate$intermediate.tertile1v23 <- recode(tertile, "1" = "low", "2" = "high", "3" = "high")
 sample_metadata_intermediate$intermediate.tertile12v3 <- recode(tertile, "1" = "low", "2" = "low", "3" = "high")
-write.table(sample_metadata_intermediate, file = "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/Tertile_Contrasts_IntermediateExpression.txt", sep="\t", quote = FALSE)
+write.table(sample_metadata_intermediate, file = paste(outdir, "Tertile_Contrasts_IntermediateExpression.txt", sep=""), sep="\t", quote = FALSE)
 
 # all HRPos WT
 tertile <- ntile(sample_metadata_HRPos$wt.expression, 3)
 sample_metadata_HRPos$wt.HRPos.tertile1v23 <- recode(tertile, "1" = "low", "2" = "high", "3" = "high")
 sample_metadata_HRPos$wt.HRPos.tertile12v3 <- recode(tertile, "1" = "low", "2" = "low", "3" = "high")
-write.table(sample_metadata_HRPos, file = "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/Tertile_Contrasts_WTExpression_HRPos.txt", sep="\t", quote = FALSE)
+write.table(sample_metadata_HRPos, file = paste(outdir, "Tertile_Contrasts_WTExpression_HRPos.txt", sep=""), sep="\t", quote = FALSE)
 
 # all HRPos Intermediate
 tertile <- ntile(sample_metadata_HRPos_intermediate$intermediate.expression, 3)
 sample_metadata_HRPos_intermediate$intermediate.HRPos.tertile1v23 <- recode(tertile, "1" = "low", "2" = "high", "3" = "high")
 sample_metadata_HRPos_intermediate$intermediate.HRPos.tertile12v3 <- recode(tertile, "1" = "low", "2" = "low", "3" = "high")
-write.table(sample_metadata_HRPos_intermediate, file = "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/Tertile_Contrasts_IntermediateExpression_HRPos.txt", sep="\t", quote = FALSE)
+write.table(sample_metadata_HRPos_intermediate, file = paste(outdir, "Tertile_Contrasts_IntermediateExpression_HRPos.txt", sep=""), sep="\t", quote = FALSE)
 
 ## Create focused sample tables for each contrast
 # Compare patients who express the intermediate and those who don't
@@ -120,7 +124,6 @@ st_HRPos.intermediate.tertile12v3 <- data.frame(sampleName = sample_metadata_HRP
 
 
 ## set up variables for run
-outdir <- "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/results/"
 
 run_contrast(st = st_HRPos.intermediate.tertile1v23, outdir = outdir, outprefix = "HRPos.intermediate.tertile1v23.ctrlLow", control_level = "low")
 run_contrast(st = st_HRPos.intermediate.tertile12v3, outdir = outdir, outprefix = "HRPos.intermediate.tertile12v3.ctrlLow", control_level = "low")
