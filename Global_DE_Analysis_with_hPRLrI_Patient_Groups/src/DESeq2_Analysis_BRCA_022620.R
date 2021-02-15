@@ -1,6 +1,6 @@
 # Amy Olex
 # 2/26/20
-# Script to perform DESeq2 DEG analyses on BRCA data.
+# Script to perform DESeq2 DEG analyses on subsets of BRCA data that are defined by hPRLr and hPRLrI expression.
 #
 # Part of this code comes from the tutorial at http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#htseq
 library("DESeq2")
@@ -34,10 +34,15 @@ run_contrast <- function(st, outdir, outprefix, control_level) {
   
 }
 
-setwd("/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/")
-data_dir <- "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_1222_RNASeq_HTSeq-counts_022620"
-sample_metadata <- read.delim(file = "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_MetadataMaster_031220.tsv", header = TRUE)
-outdir <- "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/results/"
+#setwd("/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/")
+#data_dir <- "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_1222_RNASeq_HTSeq-counts_022620"
+#sample_metadata <- read.delim(file = "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_MetadataMaster_031220.tsv", header = TRUE)
+#outdir <- "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/results/"
+
+setwd("./")
+data_dir <- "../data/"
+sample_metadata <- read.delim(file = "../data/BRCA_MetadataMaster_031220.tsv", header = TRUE)
+outdir <- "./"
 
 #setwd("/home/alolex/data/clients/CClevenger/DESeq_Analysis/")
 #data_dir <- "/home/alolex/data/clients/CClevenger/DESeq_Analysis/data"
@@ -127,48 +132,55 @@ st_HRPos.intermediate.tertile1v3 <- data.frame(sampleName = sample_metadata_HRPo
 
 
 
-#### Ok, now we have 15 sample tables:
+#### Now we have 15 sample tables:
 ## Since these contrasts have been taking a long time to load into R I'm going to do the smallest ones first.
+## WARNING: This section of code takes a LONG time to run.
 
 #1  st_HRPos.intermediate.tertile1v23 : 135
-#print("Running #1  st_HRPos.intermediate.tertile1v23 : 135")
-#run_contrast(st = st_HRPos.intermediate.tertile1v23, outdir = outdir, outprefix = "HRPos.intermediate.tertile1v23.ctrlLow", control_level = "low")
+print("Running #1  st_HRPos.intermediate.tertile1v23 : 135")
+run_contrast(st = st_HRPos.intermediate.tertile1v23, outdir = outdir, outprefix = "HRPos.intermediate.tertile1v23.ctrlLow", control_level = "low")
 
 #2  st_HRPos.intermediate.tertile12v3 : 135
-#print("Running #2  st_HRPos.intermediate.tertile12v3 : 135")
-#run_contrast(st = st_HRPos.intermediate.tertile12v3, outdir = outdir, outprefix = "HRPos.intermediate.tertile12v3.ctrlLow", control_level = "low")
+print("Running #2  st_HRPos.intermediate.tertile12v3 : 135")
+run_contrast(st = st_HRPos.intermediate.tertile12v3, outdir = outdir, outprefix = "HRPos.intermediate.tertile12v3.ctrlLow", control_level = "low")
 
 #3 st_HRPos.intermediate.tertile1v3 : 90
-#print("Running #3 st_HRPos.intermediate.tertile1v3 : 90")
-#run_contrast(st = st_HRPos.intermediate.tertile1v3, outdir = outdir, outprefix = "HRPos.intermediate.tertile1v3.ctrlLow", control_level = "low")
+print("Running #3 st_HRPos.intermediate.tertile1v3 : 90")
+run_contrast(st = st_HRPos.intermediate.tertile1v3, outdir = outdir, outprefix = "HRPos.intermediate.tertile1v3.ctrlLow", control_level = "low")
 
 #4  st_intermediate.tertile1v23 : 203
-#print("Running #4  st_intermediate.tertile1v23 : 203")
-#run_contrast(st = st_intermediate.tertile1v23, outdir = outdir, outprefix = "intermediate.tertile1v23.ctrlLow", control_level = "low")
+print("Running #4  st_intermediate.tertile1v23 : 203")
+run_contrast(st = st_intermediate.tertile1v23, outdir = outdir, outprefix = "intermediate.tertile1v23.ctrlLow", control_level = "low")
+
 #5  st_intermediate.tertile12v3 : 203
-#print("Running #5  st_intermediate.tertile12v3 : 203")
-#run_contrast(st = st_intermediate.tertile12v3, outdir = outdir, outprefix = "intermediate.tertile12v3.ctrlLow", control_level = "low")
+print("Running #5  st_intermediate.tertile12v3 : 203")
+run_contrast(st = st_intermediate.tertile12v3, outdir = outdir, outprefix = "intermediate.tertile12v3.ctrlLow", control_level = "low")
+
 #6 st_intermediate.tertile1v3 : 135
-#print("Running #6 st_intermediate.tertile1v3 : 135")
-#run_contrast(st = st_intermediate.tertile1v3, outdir = outdir, outprefix = "intermediate.tertile1v3.ctrlLow", control_level = "low")
+print("Running #6 st_intermediate.tertile1v3 : 135")
+run_contrast(st = st_intermediate.tertile1v3, outdir = outdir, outprefix = "intermediate.tertile1v3.ctrlLow", control_level = "low")
 
 #7 st_intermediate.ratio.tertile1v3 : 135
-#print("Running #7 st_intermediate.ratio.tertile1v3 : 135")
-#run_contrast(st = st_intermediate.ratio.tertile1v3, outdir = outdir, outprefix = "intermediate.ratio.tertile1v3.ctrlLow", control_level = "low")
+print("Running #7 st_intermediate.ratio.tertile1v3 : 135")
+run_contrast(st = st_intermediate.ratio.tertile1v3, outdir = outdir, outprefix = "intermediate.ratio.tertile1v3.ctrlLow", control_level = "low")
 
 #8  st_HRPos.intermediate.expressed : 646
-#print("Running #8  st_HRPos.intermediate.expressed : 646")
-#run_contrast(st = st_HRPos.intermediate.expressed, outdir = outdir, outprefix = "HRpos.intermediate.expressed.ctrlNo", control_level = "No")
-#9  st_HRPos.wt.tertile1v23 : 646
-#print("Running #9  st_HRPos.wt.tertile1v23 : 646")
-#run_contrast(st = st_HRPos.wt.tertile1v23, outdir = outdir, outprefix = "HRPos.wt.tertile1v23.ctrlLow", control_level = "low")
-#10  st_HRPos.wt.tertile12v3 : 646
-#print("Running #10  st_HRPos.wt.tertile12v3 : 646")
-#run_contrast(st = st_HRPos.wt.tertile12v3, outdir = outdir, outprefix = "HRPos.wt.tertile12v3.ctrlLow", control_level = "low")
-#11 st_wt.HRPos.tertile1v3 : 431
-#print("Running #11 st_wt.HRPos.tertile1v3 : 431")
-#run_contrast(st = st_wt.HRPos.tertile1v3, outdir = outdir, outprefix = "HRPos.wt.tertile1v3.ctrlLow", control_level = "low")
+print("Running #8  st_HRPos.intermediate.expressed : 646")
+run_contrast(st = st_HRPos.intermediate.expressed, outdir = outdir, outprefix = "HRpos.intermediate.expressed.ctrlNo", control_level = "No")
 
+#9  st_HRPos.wt.tertile1v23 : 646
+print("Running #9  st_HRPos.wt.tertile1v23 : 646")
+run_contrast(st = st_HRPos.wt.tertile1v23, outdir = outdir, outprefix = "HRPos.wt.tertile1v23.ctrlLow", control_level = "low")
+
+#10  st_HRPos.wt.tertile12v3 : 646
+print("Running #10  st_HRPos.wt.tertile12v3 : 646")
+run_contrast(st = st_HRPos.wt.tertile12v3, outdir = outdir, outprefix = "HRPos.wt.tertile12v3.ctrlLow", control_level = "low")
+
+#11 st_wt.HRPos.tertile1v3 : 431
+print("Running #11 st_wt.HRPos.tertile1v3 : 431")
+run_contrast(st = st_wt.HRPos.tertile1v3, outdir = outdir, outprefix = "HRPos.wt.tertile1v3.ctrlLow", control_level = "low")
+
+## THE FOLLOWING CONTRASTS HAVE TOO MANY PATIENTS, SO RANDOM SUBSETS ARE CHOSEN, THUS, THIS SECTION MAY NOT PRODUCE THE EXACT SAME RESULTS EACH TIME.
 
 ## function code from https://stackoverflow.com/questions/35857290/random-sample-of-rows-with-at-least-one-from-each-condition
 sample_each <- function(data, var, n = 1L) {
