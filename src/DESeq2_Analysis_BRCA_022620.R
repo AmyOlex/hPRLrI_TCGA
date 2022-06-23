@@ -34,15 +34,15 @@ run_contrast <- function(st, outdir, outprefix, control_level) {
   
 }
 
-setwd("/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/")
-data_dir <- "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_1222_RNASeq_HTSeq-counts_022620"
-sample_metadata <- read.delim(file = "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_MetadataMaster_031220.tsv", header = TRUE)
-outdir <- "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/results/"
+#setwd("/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/")
+#data_dir <- "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_1222_RNASeq_HTSeq-counts_022620"
+#sample_metadata <- read.delim(file = "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/BRCA_MetadataMaster_031220.tsv", header = TRUE)
+#outdir <- "/Volumes/GoogleDrive/My Drive/Active Collaborations/CClevanger/BRCA_TCGA_DEG_Analyses 022420/results/"
 
-#setwd("/home/alolex/data/clients/CClevenger/DESeq_Analysis/")
-#data_dir <- "/home/alolex/data/clients/CClevenger/DESeq_Analysis/data"
-#sample_metadata <- read.delim(file = "/home/alolex/data/clients/CClevenger/DESeq_Analysis/BRCA_MetadataMaster_031220.tsv", header = TRUE)
-#outdir <- "/home/alolex/data/clients/CClevenger/DESeq_Analysis/"
+setwd("/home/alolex/data/clients/CClevenger/DESeq_Analysis/")
+data_dir <- "/home/alolex/data/clients/CClevenger/DESeq_Analysis/data"
+sample_metadata <- read.delim(file = "/home/alolex/data/clients/CClevenger/DESeq_Analysis/BRCA_MetadataMaster_031220.tsv", header = TRUE)
+outdir <- "/home/alolex/data/clients/CClevenger/DESeq_Analysis/"
 
 
 sample_metadata_HRPos <- sample_metadata[sample_metadata$hormone.status == "Positive",]
